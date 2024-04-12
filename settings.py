@@ -4,7 +4,7 @@ import tkinter as tk
 
 class Settings:
     def __init__(self):
-        with open(r".\calc_settings.json", encoding="UTF-8") as f:
+        with open(r"./calc_settings.json", encoding="UTF-8") as f:
             self.settings_dict = json.load(f)
 
         root = tk.Tk()
@@ -234,7 +234,7 @@ class Settings:
                 self.settings_dict["float-bit"] = float_bit.get()
             # print(self.settings_dict)
             data = json.dumps(self.settings_dict)
-            with open(r".\calc_settings.json", "w", encoding="UTF-8") as f:
+            with open(r"./calc_settings.json", "w", encoding="UTF-8") as f:
                 f.write(data)
 
         tk.Button(
