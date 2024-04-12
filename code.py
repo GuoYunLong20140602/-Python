@@ -14,7 +14,7 @@ res = 0
 history = []
 
 with open(
-    r"C:\Users\Administrator\Desktop\Projects\实战\Python\tkinter库\计算器0-06\calc_settings.json",
+    r".\calc_settings.json",
     encoding="UTF-8",
 ) as f:
     settings_dict = json.load(f)
