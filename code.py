@@ -1,4 +1,6 @@
-"""六代版本的计算器，v6.0"""
+# 相关代码已经开源到GitHub, 请访问https://github.com/Guo-https://github.com/GuoYunLong20140602/-Python/tree/main
+# 需要安装pyperclip 安装方法:pip install pyperclip
+"""七代版本的计算器，v7.0"""
 # 导入tkinter, math, pyperclip, json 和 tkinter.messagebox
 import json
 import math
@@ -7,31 +9,37 @@ from tkinter import messagebox
 
 import pyperclip as pc
 
+import bmi_calc
+import bmi_judge
 import number_systems_conversion
 import settings
 
+results = [0, 0]
 res = 0
+res1 = results[-2]
 history = []
+memory = 0
 
 with open(
-    r"./calc_settings.json",
+    r"C:\Users\Administrator\Desktop\Projects\实战\Python\tkinter库\计算器0-07\calc_settings.json",
     encoding="UTF-8",
 ) as f:
     settings_dict = json.load(f)
     # print(settings_dict)
 
 
-class History: 
+class History:
     def __init__(self) -> None:
         self.history = history
+
     def show_history(self):
-        h = '\n'.join(self.history)
-        messagebox.showinfo("计算器-历史记录v6.0", f"{h}")
+        h = "\n".join(self.history)
+        messagebox.showinfo("计算器-历史记录v7.0", f"{h}")
 
 
 class Commands:
-    def __init__(self):
-        self.input_expression = expression_display
+    def __init__(self, box):
+        self.input_expression = box
 
     def about_author(self):
         messagebox.showinfo("计算器6.0-关于作者", "作者:郭芸龙")
@@ -127,7 +135,7 @@ class Commands:
             else:
                 self.input_expression.insert(0, "-")
         else:
-            messagebox.showerror("计算器-报错v6.0", f"对不起, 您输入的表达式有错误, 请重新输入")
+            messagebox.showerror("计算器-报错v7.0", f"对不起, 您输入的表达式有错误, 请重新输入")
 
     def write_eq_eq(self):
         self.input_expression.insert("insert", "==")
@@ -147,8 +155,30 @@ class Commands:
     def write_unequal(self):
         self.input_expression.insert("insert", "≠")
 
+    def memory_plus(self):
+        global memory
+        try:
+            memory += float(self.input_expression.get())
+        except:
+            messagebox.showerror("计算器-报错v7.0", f"对不起, 您输入的表达式有错误, 请重新输入")
+
+    def memory_minus(self):
+        global memory
+        try:
+            memory -= float(self.input_expression.get())
+        except:
+            messagebox.showerror("计算器-报错v7.0", f"对不起, 您输入的表达式有错误, 请重新输入")
+
+    def memory_clear(self):
+        global memory
+
+        memory = 0
+
+    def memory_read(self):
+        self.input_expression.insert("insert", memory)
+
     def write_result(self):
-        global res
+        global res, res1
         try:
             res = expression_display.get()
             res = res.replace("×", "*")
@@ -159,48 +189,66 @@ class Commands:
             res = res.replace("≥", ">=")
             res = res.replace("≤", "<=")
             res = res.replace("≠", "!=")
-            res1 = res
+            res0 = res
             # print(res)
             res = eval(res)
+            results.append(res)
+            if len(results) == 3:
+                results.pop(0)
+            res1 = results[-2]
+
             a = settings_dict["float-bit"]
-            if a == 0:
-                messagebox.showinfo("计算器-结果v6.0", f"{int(res)}")
+            if a == "0":
+                messagebox.showinfo("计算器-结果v7.0", f"{int(res)}")
                 print(f"{int(res)}")
-            elif a == 1:
-                messagebox.showinfo("计算器-结果v6.0", f"{res:.1f}")
+            elif a == "1":
+                messagebox.showinfo("计算器-结果v7.0", f"{res:.1f}")
                 print(f"{res:.1f}")
-            elif a == 2:
-                messagebox.showinfo("计算器-结果v6.0", f"{res:.2f}")
+            elif a == "2":
+                messagebox.showinfo("计算器-结果v7.0", f"{res:.2f}")
                 print(f"{res:.2f}")
-            elif a == 3:
-                messagebox.showinfo("计算器-结果v6.0", f"{res:.3f}")
+            elif a == "3":
+                messagebox.showinfo("计算器-结果v7.0", f"{res:.3f}")
                 print(f"{res:.3f}")
-            elif a == 4:
-                messagebox.showinfo("计算器-结果v6.0", f"{res:.4f}")
+            elif a == "4":
+                messagebox.showinfo("计算器-结果v7.0", f"{res:.4f}")
                 print(f"{res:.4f}")
-            elif a == 5:
-                messagebox.showinfo("计算器-结果v6.0", f"{res:.5f}")
+            elif a == "5":
+                messagebox.showinfo("计算器-结果v7.0", f"{res:.5f}")
                 print(f"{res:.5f}")
             else:
-                messagebox.showinfo("计算器-结果v6.0", f"{res}")
+                messagebox.showinfo("计算器-结果v7.0", f"{res}")
                 print(f"{res}")
 
             # 将计算结果添加到历史记录列表中
-            history.append(f"{res1}:{res}")
+            history.append(f"{res0}:{res}")
 
         except:
-            messagebox.showerror("计算器-报错v6.0", f"对不起, 您输入的表达式有错误, 请重新输入")
+            messagebox.showerror("计算器-报错v7.0", f"对不起, 您输入的表达式有错误, 请重新输入")
         else:
             pass
 
     def cut(self):
-        self.input_expression.event_generate("<<Cut>>")
+        # 获取全部的文本内容
+        selected_text = self.input_expression.get()
+
+        # 删除所有的文本
+        self.input_expression.delete(0, tk.END)
+
+        # copy
+        pc.copy(selected_text)
 
     def copy(self):
-        self.input_expression.event_generate("<<Copy>>")
+        # self.input_expression.event_generate("<<Copy>>")
+        pc.copy(self.input_expression.get())
 
     def paste(self):
-        self.input_expression.event_generate("<<Paste>>")
+        # self.input_expression.event_generate("<<Paste>>")
+        n = pc.paste()
+        self.input_expression.insert("insert", n)
+
+    def copy_last_res(self):
+        pc.copy(res1)
 
     def answer_copy(self):
         pc.copy(res)
@@ -211,13 +259,19 @@ class Commands:
     def open_number_systems_conversion(self):
         number_systems_conversion.NumberSystemConversion()
 
+    def open_bmi_calc(self):
+        bmi_calc.BMICalc()
+        
+    def open_bmi_judge(self):
+        bmi_judge.BMIJudge()
+
 
 # 创建窗口
 root = tk.Tk()
 
 # 设置窗口
 root.geometry("700x450")
-root.title("计算器v6.0")
+root.title("计算器v7.0")
 # 变量
 
 
@@ -235,7 +289,7 @@ sqrt = math.sqrt
 cos = math.cos
 sin = math.sin
 tan = math.tan
-commands = Commands()
+commands = Commands(expression_display)
 e = math.e
 π = math.pi
 
@@ -246,7 +300,8 @@ File_bar = tk.Menu(menu_bar, tearoff=0)
 menu_bar.add_cascade(label="文件", menu=File_bar)
 File_bar.add_command(label="打开设置文件", command=commands.open_settings)
 File_bar.add_command(label="打开进制转换器", command=commands.open_number_systems_conversion)
-
+File_bar.add_command(label="打开BMI计算器", command=commands.open_bmi_calc)
+File_bar.add_command(label="打开BMI判断器", command=commands.open_bmi_judge)
 File_bar.add_separator()
 File_bar.add_command(label="退出", command=root.quit)
 
@@ -254,10 +309,15 @@ File_bar.add_command(label="退出", command=root.quit)
 # 编辑栏
 Edit_bar = tk.Menu(menu_bar, tearoff=0)
 menu_bar.add_cascade(label="编辑", menu=Edit_bar)
+Edit_bar.add_command(label="记忆加", command=commands.memory_plus)
+Edit_bar.add_command(label="记忆减", command=commands.memory_minus)
+Edit_bar.add_command(label="记忆清空", command=commands.memory_clear)
+Edit_bar.add_command(label="记忆读取", command=commands.memory_read)
 Edit_bar.add_command(label="复制算式", command=commands.copy)
 Edit_bar.add_command(label="剪切算式", command=commands.cut)
 Edit_bar.add_command(label="粘贴算式", command=commands.paste)
 Edit_bar.add_command(label="复制结果", command=commands.answer_copy)
+Edit_bar.add_command(label="复制上一次的结果", command=commands.copy_last_res)
 
 
 # 帮助栏
@@ -560,7 +620,7 @@ OFFButton = tk.Button(
     text="OFF",
     font=(settings_dict["button-font"], settings_dict["button-font-size"]),
     width=6,
-    command=root.quit,
+    command=root.destroy,
     bg=settings_dict["button-bg"],
 )
 Copybutton = tk.Button(
