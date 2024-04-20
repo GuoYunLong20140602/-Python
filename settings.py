@@ -1,16 +1,17 @@
 import json
 import tkinter as tk
+# import calc
 
 
 class Settings:
     def __init__(self):
-        with open(r"./calc_settings.json", encoding="UTF-8") as f:
+        with open(r"C:\Users\Administrator\Desktop\Projects\实战\Python\tkinter库\计算器0-07\calc_settings.json", encoding="UTF-8") as f:
             self.settings_dict = json.load(f)
 
         root = tk.Tk()
         root.config(bg=self.settings_dict["bg"])
         root.geometry("670x610+150+150")
-        root.title("计算器v6.0-设置")
+        root.title("计算器v7.0-设置")
         contents = self.settings_dict.keys()
         # contents = [
         #     "expression-font",
@@ -204,6 +205,7 @@ class Settings:
         float_bit.grid(row=14, column=2)
 
         def save():
+            
             if expression_font.get():
                 self.settings_dict["expression-font"] = expression_font.get()
             if expression_font_size.get():
@@ -234,8 +236,10 @@ class Settings:
                 self.settings_dict["float-bit"] = float_bit.get()
             # print(self.settings_dict)
             data = json.dumps(self.settings_dict)
-            with open(r"./calc_settings.json", "w", encoding="UTF-8") as f:
+            with open(r"C:\Users\Administrator\Desktop\Projects\实战\Python\tkinter库\计算器0-07\calc_settings.json", "w", encoding="UTF-8") as f:
                 f.write(data)
+
+            
 
         tk.Button(
             root,
